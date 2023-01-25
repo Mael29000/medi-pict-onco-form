@@ -24,6 +24,10 @@ const styles = {
     "flex-wrap": "wrap",
     "justify-content": "space-evenly",
     "align-items": "center",
+    "background-image": "url('../images/pills_1.png')",
+    "background-repeat": "no-repeat",
+    "background-attachment": "fixed",
+    "background-position": "center",
   },
   root: {
     fontFamily: "sans-serif",
@@ -59,7 +63,7 @@ export default function Form() {
   const [clear, setClear] = useState(0);
 
   return (
-    <div style={styles.section_main}>
+    <div style={styles.section_main} className="section_main">
       <Box sx={{ p: 10 }}>
         <Box
           sx={{
@@ -103,8 +107,8 @@ export default function Form() {
         ) : (
           <OccasionalForm />
         )}
-        <QrCode />
       </Box>
+      <QrCode />
     </div>
   );
 }
