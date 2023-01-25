@@ -12,29 +12,29 @@ import {
   TraitementType,
   useTraitmentsContext,
 } from "../contexts/TraitmentsContext";
-
+import OccasionalForm from "../components/OccasionalForm";
+import { Console } from "console";
 
 import QrCode from "../components/QrCode";
 
 const styles = {
-  section_main:{
-    display: 'flex',
-    'flex-direction': 'row',
-    'flex-wrap': 'wrap',
-    'justify-content': 'space-evenly',
-    'align-items': 'center',
+  section_main: {
+    display: "flex",
+    "flex-direction": "row",
+    "flex-wrap": "wrap",
+    "justify-content": "space-evenly",
+    "align-items": "center",
   },
   root: {
-    fontFamily: 'sans-serif',
+    fontFamily: "sans-serif",
   },
   h1: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   qrcode: {
-    textAlign: 'center',
+    textAlign: "center",
   },
 };
-
 
 export default function Form() {
   const { addTraitment } = useTraitmentsContext();
@@ -60,7 +60,6 @@ export default function Form() {
 
   return (
     <div style={styles.section_main}>
-
       <Box sx={{ p: 10 }}>
         <Box
           sx={{
@@ -70,7 +69,7 @@ export default function Form() {
             mb: 20,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", mr:8}}>
+          <Box sx={{ display: "flex", alignItems: "center", mr: 8 }}>
             <Autocomplete
               key={clear}
               disablePortal
@@ -97,14 +96,15 @@ export default function Form() {
               {TraitementType.OCCASIONAL}
             </ToggleButton>
           </ToggleButtonGroup>
-
         </Box>
-          
-          {traitementType === TraitementType.RECURENT ? <RecurentForm /> : null}
 
+        {traitementType === TraitementType.RECURENT ? (
+          <RecurentForm />
+        ) : (
+          <OccasionalForm />
+        )}
+        <QrCode />
       </Box>
-      <QrCode />
     </div>
-
   );
 }
