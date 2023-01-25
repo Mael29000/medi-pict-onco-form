@@ -13,6 +13,29 @@ import {
   useTraitmentsContext,
 } from "../contexts/TraitmentsContext";
 
+
+import QrCode from "../components/QrCode";
+
+const styles = {
+  section_main:{
+    display: 'flex',
+    'flex-direction': 'row',
+    'flex-wrap': 'wrap',
+    'justify-content': 'space-evenly',
+    'align-items': 'center',
+  },
+  root: {
+    fontFamily: 'sans-serif',
+  },
+  h1: {
+    textAlign: 'center',
+  },
+  qrcode: {
+    textAlign: 'center',
+  },
+};
+
+
 export default function Form() {
   const { addTraitment } = useTraitmentsContext();
 
@@ -36,44 +59,52 @@ export default function Form() {
   const [clear, setClear] = useState(0);
 
   return (
-    <Box sx={{ p: 10 }}>
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          justifyContent: "space-between",
-          mb: 20,
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Autocomplete
-            key={clear}
-            disablePortal
-            id="combo-box-demo"
-            options={allTraitments}
-            sx={{ width: 300 }}
-            renderInput={(params) => (
-              <TextField {...params} label="Traitement" />
-            )}
-            getOptionLabel={(option) => option.name}
-            onChange={handleTraitementChange}
-            placeholder="Choisir un traitement"
-          />
-        </Box>
-        <ToggleButtonGroup
-          value={traitementType}
-          exclusive
-          onChange={handleTraitementTypeChange}
+    <div style={styles.section_main}>
+
+      <Box sx={{ p: 10 }}>
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-between",
+            mb: 20,
+          }}
         >
-          <ToggleButton value={TraitementType.RECURENT}>
-            {TraitementType.RECURENT}
-          </ToggleButton>
-          <ToggleButton value={TraitementType.OCCASIONAL}>
-            {TraitementType.OCCASIONAL}
-          </ToggleButton>
-        </ToggleButtonGroup>
+          <Box sx={{ display: "flex", alignItems: "center", mr:8}}>
+            <Autocomplete
+              key={clear}
+              disablePortal
+              id="combo-box-demo"
+              options={allTraitments}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Traitement" />
+              )}
+              getOptionLabel={(option) => option.name}
+              onChange={handleTraitementChange}
+              placeholder="Choisir un traitement"
+            />
+          </Box>
+          <ToggleButtonGroup
+            value={traitementType}
+            exclusive
+            onChange={handleTraitementTypeChange}
+          >
+            <ToggleButton value={TraitementType.RECURENT}>
+              {TraitementType.RECURENT}
+            </ToggleButton>
+            <ToggleButton value={TraitementType.OCCASIONAL}>
+              {TraitementType.OCCASIONAL}
+            </ToggleButton>
+          </ToggleButtonGroup>
+
+        </Box>
+          
+          {traitementType === TraitementType.RECURENT ? <RecurentForm /> : null}
+
       </Box>
-      {traitementType === TraitementType.RECURENT ? <RecurentForm /> : null}
-    </Box>
+      <QrCode />
+    </div>
+
   );
 }

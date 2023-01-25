@@ -120,7 +120,7 @@ export default function Program(props: ITraitementProps) {
           onChange={handleUnitChange}
           getOptionKey={(option) => option}
           getOptionLabel={(option) => option}
-          sx={{ mr: 2, width: 60 }}
+          sx={{ mr: 2, width: 70, ml: 1 }}
         />
 
         <Select

@@ -48,6 +48,7 @@ export enum Format {
 }
 
 interface TraitmentContextProps {
+  allTraitments: ITraitement[];
   recurentTraitments: ITraitement[];
   occasionalTraitments: ITraitement[];
   addTraitment: (medication: IMedication, type: TraitementType) => void;
@@ -62,6 +63,7 @@ export enum Unit {
 }
 
 const initialValues: TraitmentContextProps = {
+  allTraitments: [],
   recurentTraitments: [],
   occasionalTraitments: [],
   addTraitment: () => {},
@@ -131,6 +133,7 @@ export const TraitmentsProvider = ({ children }: any) => {
   return (
     <TraitmentsContext.Provider
       value={{
+        allTraitments:traitments,
         recurentTraitments,
         occasionalTraitments,
         addTraitment,
