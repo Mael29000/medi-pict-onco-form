@@ -1,9 +1,10 @@
 import React from "react";
 import Traitement from "./Traitement";
-import { useTraitmentsContext } from "../contexts/TraitmentsContext";
 import {
-  Paper,
-} from "@mui/material";
+  TraitementType,
+  useTraitmentsContext,
+} from "../contexts/TraitmentsContext";
+import { Paper } from "@mui/material";
 interface IReccurentFormProps {}
 
 export default function RecurentForm(props: IReccurentFormProps) {
@@ -14,9 +15,14 @@ export default function RecurentForm(props: IReccurentFormProps) {
   return (
     <>
       {recurentTraitments.map((option, index) => (
-                <Paper elevation={12}>
-                  <Traitement traitement={option} sx={{ mb: 4, p:2 }} key={option.id} />       
-                </Paper>
+        <Paper elevation={12}>
+          <Traitement
+            traitement={option}
+            sx={{ mb: 4, p: 2 }}
+            key={option.id}
+            type={TraitementType.RECURENT}
+          />
+        </Paper>
       ))}
     </>
   );

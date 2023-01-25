@@ -1,34 +1,31 @@
 import React, { useEffect } from "react";
 import Select from "./Select";
 import TextField from "./TextField";
-import DateRange from "./DateRange";
-import Frequency from "./Frequency";
 import {
   Format,
-  Frequency as FrequencyEnum,
   IProgram,
   ITraitement,
   TakeMode,
+  TraitementType,
   Unit,
   useTraitmentsContext,
 } from "../contexts/TraitmentsContext";
 import { Box } from "@mui/material";
+import ReccurentProperties from "./ReccurentProperties";
+import OccasionalProperties from "./OccasionalProperties";
 
 interface ITraitementProps {
   program: IProgram;
   programIndex: number;
   traitement: ITraitement;
   sx?: any;
+  type: TraitementType;
 }
 
 export default function Program(props: ITraitementProps) {
-  const { program, sx, programIndex, traitement } = props;
+  const { program, sx, programIndex, traitement, type } = props;
 
   const { updateTraitement } = useTraitmentsContext();
-
-  const [frequency, setFrequency] = React.useState<FrequencyEnum[]>(
-    program.frequency
-  );
 
   const [dose, setDose] = React.useState<number>(program.dose);
 
@@ -36,31 +33,7 @@ export default function Program(props: ITraitementProps) {
 
   const [format, setFormat] = React.useState(Format.COMPRIME);
 
-  const [timeRange, setTimeRange] = React.useState({
-    start: new Date(),
-    end: new Date(),
-  });
-
   const [takeMode, setTakeMode] = React.useState(TakeMode.PER_OS);
-
-  const handleStartDateChange = (date: Date | null) => {
-    if (!date) return;
-    setTimeRange({ ...timeRange, start: date });
-  };
-
-  const handleEndDateChange = (date: Date | null) => {
-    if (!date) return;
-    setTimeRange({ ...timeRange, end: date });
-  };
-
-  const handleChangeFrequency = (value: string) => {
-    // if value present in frequency, remove it
-    // else add it
-    const newFrequency = frequency.includes(value as FrequencyEnum)
-      ? frequency.filter((f) => f !== value)
-      : [...frequency, value as FrequencyEnum];
-    setFrequency(newFrequency);
-  };
 
   const handleChangeFormat = (event: any) => {
     const newFormat = (event.target as HTMLInputElement).value;
@@ -83,12 +56,10 @@ export default function Program(props: ITraitementProps) {
 
   useEffect(() => {
     // update traitement and program
-    const newPrograms = [...traitement.programs];
+    const newPrograms = [...(traitement.programs || [])];
     newPrograms[programIndex] = {
       ...program,
-      frequency,
       unit,
-      timeRange,
       dose,
     };
     updateTraitement({
@@ -97,7 +68,7 @@ export default function Program(props: ITraitementProps) {
       format,
       mode_prise: takeMode,
     });
-  }, [frequency, unit, format, timeRange, takeMode, dose]);
+  }, [unit, format, takeMode, dose]);
 
   return (
     <Box sx={{ ...sx }}>
@@ -105,7 +76,7 @@ export default function Program(props: ITraitementProps) {
         sx={{
           // mt: 10,
           display: "flex",
-          alignItems: "flex-start",
+          alignItems: "flexStart",
         }}
       >
         <TextField
@@ -141,22 +112,15 @@ export default function Program(props: ITraitementProps) {
           sx={{ mr: 2 }}
         />
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          mt: 2,
-        }}
-      >
-        <DateRange
-          timeRange={timeRange}
-          onDateEndChange={handleEndDateChange}
-          onDateStartChange={handleStartDateChange}
+      {type === TraitementType.RECURENT ? (
+        <ReccurentProperties
+          program={program}
+          programIndex={programIndex}
+          traitement={traitement}
         />
-        <Box sx={{ ml: 2 }}>
-          <Frequency onChange={handleChangeFrequency} />
-        </Box>
-      </Box>
+      ) : (
+        <OccasionalProperties traitement={traitement} />
+      )}
     </Box>
   );
 }

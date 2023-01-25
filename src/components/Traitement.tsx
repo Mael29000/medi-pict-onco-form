@@ -5,6 +5,7 @@ import {
   ITraitement,
   useTraitmentsContext,
   Unit,
+  TraitementType,
 } from "../contexts/TraitmentsContext";
 import { AddCircle } from "@mui/icons-material";
 import Program from "./Program";
@@ -12,30 +13,15 @@ import Program from "./Program";
 interface ITraitementProps {
   traitement: ITraitement;
   sx?: any;
+  type: TraitementType;
 }
 
 export default function Traitement(props: ITraitementProps) {
-  const { traitement, sx } = props;
+  const { traitement, sx, type } = props;
 
   console.log("Traitement", traitement);
 
   const { removeTraitment, updateTraitement } = useTraitmentsContext();
-
-  const [frequency, setFrequency] = React.useState("Once a day");
-
-  const [unit, setUnit] = React.useState("ml");
-
-  const handleChangeFrequency = (event: any) => {
-    const newFrequency = (event.target as HTMLInputElement).value;
-    console.log("newFrequency", newFrequency);
-    setFrequency(newFrequency);
-  };
-
-  const handleUnitChange = (event: any) => {
-    const newUnit = (event.target as HTMLInputElement).value;
-    console.log("newUnit", newUnit);
-    setUnit(newUnit);
-  };
 
   const handleRemove = () => {
     removeTraitment(traitement.id);
@@ -44,20 +30,29 @@ export default function Traitement(props: ITraitementProps) {
   const addProgram = () => {
     updateTraitement({
       ...traitement,
-      programs: [
-        ...traitement.programs,
-        {
-          frequency: [],
-          dose: 0,
-          unit: Unit.ML,
-          timeRange: { start: new Date(), end: new Date() },
-        },
-      ],
+      programs:
+        type === TraitementType.RECURENT
+          ? [
+              ...traitement.programs,
+              {
+                frequency: [],
+                dose: 0,
+                unit: Unit.ML,
+                timeRange: { start: new Date(), end: new Date() },
+              },
+            ]
+          : [
+              {
+                dose: 0,
+                unit: Unit.ML,
+                symptoms: [],
+              },
+            ],
     });
   };
 
   const handleRemoveProgram = (index: number) => {
-    const newPrograms = [...traitement.programs];
+    const newPrograms = [...(traitement.programs || [])];
     newPrograms.splice(index, 1);
     updateTraitement({
       ...traitement,
@@ -82,13 +77,14 @@ export default function Traitement(props: ITraitementProps) {
             {traitement?.medication.name}
           </Typography>
         </Box>
-
-        <IconButton>
-          <AddCircle color="primary" onClick={addProgram} />
-        </IconButton>
+        {type === TraitementType.RECURENT && (
+          <IconButton>
+            <AddCircle color="primary" onClick={addProgram} />
+          </IconButton>
+        )}
       </Box>
       <Box>
-        {traitement.programs.map((program, index) => (
+        {(traitement.programs || []).map((program, index) => (
           <Box sx={{ display: "flex" }}>
             {index > 0 ? (
               <>
@@ -110,6 +106,7 @@ export default function Traitement(props: ITraitementProps) {
                   sx={{ mt: 4 }}
                   programIndex={index}
                   traitement={traitement}
+                  type={type}
                 />
               </>
             ) : (
@@ -118,6 +115,7 @@ export default function Traitement(props: ITraitementProps) {
                 sx={{ ml: 6 }}
                 programIndex={index}
                 traitement={traitement}
+                type={type}
               />
             )}
           </Box>

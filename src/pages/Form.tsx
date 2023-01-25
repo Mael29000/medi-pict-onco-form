@@ -12,17 +12,16 @@ import {
   TraitementType,
   useTraitmentsContext,
 } from "../contexts/TraitmentsContext";
-import OccasionalForm from "../components/OccasionalForm";
-import { Console } from "console";
 
 import QrCode from "../components/QrCode";
+import OccasionalForm from "../components/OccasionalForm";
 
 const styles = {
   section_main: {
     display: "flex",
     "flex-direction": "row",
     "flex-wrap": "wrap",
-    "justify-content": "space-evenly",
+    "justify-content": "spacevenly",
     "align-items": "center",
     "background-image": "url('../images/pills_1.png')",
     "background-repeat": "no-repeat",

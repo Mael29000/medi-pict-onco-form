@@ -17,8 +17,9 @@ export interface ITraitement {
 export interface IProgram {
   dose: number;
   unit: Unit;
-  timeRange: ITimeRange;
-  frequency: Frequency[];
+  timeRange?: ITimeRange;
+  frequency?: Frequency[];
+  symptoms?: string[];
 }
 
 export enum Frequency {
@@ -91,14 +92,23 @@ export const TraitmentsProvider = ({ children }: any) => {
       medication,
       mode_prise: TakeMode.PER_OS,
       format: Format.COMPRIME,
-      programs: [
-        {
-          dose: 0,
-          unit: Unit.ML,
-          frequency: [],
-          timeRange: { start: new Date(), end: new Date() },
-        },
-      ],
+      programs:
+        type === TraitementType.RECURENT
+          ? [
+              {
+                dose: 0,
+                unit: Unit.ML,
+                frequency: [],
+                timeRange: { start: new Date(), end: new Date() },
+              },
+            ]
+          : [
+              {
+                dose: 0,
+                unit: Unit.ML,
+                symptoms: [],
+              },
+            ],
       type,
     };
 
@@ -133,7 +143,7 @@ export const TraitmentsProvider = ({ children }: any) => {
   return (
     <TraitmentsContext.Provider
       value={{
-        allTraitments:traitments,
+        allTraitments: traitments,
         recurentTraitments,
         occasionalTraitments,
         addTraitment,
